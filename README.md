@@ -20,7 +20,9 @@
 
 <br/>
 
-<img src="https://raw.githubusercontent.com/RedlightApps/zero_grid/main/doc/screenshots/zero_grid_showcase.png" width="360" alt="zero_grid 120Hz 100,000-Row iOS Simulator Showcase"/>
+<img src="https://raw.githubusercontent.com/RedlightApps/zero_grid/main/doc/screenshots/zero_grid_demo.gif" width="320" alt="zero_grid 120Hz Live Animated Demo"/>
+&nbsp;&nbsp;
+<img src="https://raw.githubusercontent.com/RedlightApps/zero_grid/main/doc/screenshots/zero_grid_showcase.png" width="320" alt="zero_grid 120Hz 100,000-Row iOS Simulator Showcase"/>
 
 </div>
 

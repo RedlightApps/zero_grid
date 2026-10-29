@@ -21,6 +21,8 @@ class ZeroDataGrid<T> extends StatefulWidget {
     this.theme = const ZeroGridTheme(),
     this.emptyPlaceholder,
     this.onCellsCopied,
+    this.verticalScrollController,
+    this.horizontalScrollController,
     super.key,
   });
 
@@ -40,14 +42,20 @@ class ZeroDataGrid<T> extends StatefulWidget {
   final Widget? emptyPlaceholder;
   /// Optional callback invoked when `Ctrl+C` / `Cmd+C` copies TSV data.
   final ValueChanged<String>? onCellsCopied;
+  /// Optional external vertical [ScrollController].
+  final ScrollController? verticalScrollController;
+  /// Optional external horizontal [ScrollController].
+  final ScrollController? horizontalScrollController;
 
   @override
   State<ZeroDataGrid<T>> createState() => _ZeroDataGridState<T>();
 }
 
 class _ZeroDataGridState<T> extends State<ZeroDataGrid<T>> {
-  final ScrollController _verticalController = ScrollController();
-  final ScrollController _horizontalController = ScrollController();
+  late final ScrollController _verticalController =
+      widget.verticalScrollController ?? ScrollController();
+  late final ScrollController _horizontalController =
+      widget.horizontalScrollController ?? ScrollController();
   final FocusNode _focusNode = FocusNode();
   double _scrollX = 0.0;
   double _scrollY = 0.0;
@@ -72,8 +80,10 @@ class _ZeroDataGridState<T> extends State<ZeroDataGrid<T>> {
 
   @override
   void dispose() {
-    _verticalController.dispose();
-    _horizontalController.dispose();
+    _verticalController.removeListener(_onScrollChanged);
+    _horizontalController.removeListener(_onScrollChanged);
+    if (widget.verticalScrollController == null) _verticalController.dispose();
+    if (widget.horizontalScrollController == null) _horizontalController.dispose();
     _focusNode.dispose();
     super.dispose();
   }

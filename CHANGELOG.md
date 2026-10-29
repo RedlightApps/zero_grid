@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Added animated GIF live showcase (`doc/screenshots/zero_grid_demo.gif`), external `verticalScrollController` / `horizontalScrollController` support on `ZeroDataGrid`, and auto-choreographed 100,000-row scrolling/sorting/filtering tour in `example/`.
+
 ## 1.0.1
 
 - Added high-resolution iOS Simulator showcase screenshots (`pubspec.yaml` gallery & `README.md`), custom column formatter support in footer aggregations, and enhanced 100,000-row trading grid example.

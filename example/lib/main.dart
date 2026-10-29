@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:zero_grid/zero_grid.dart';
 
@@ -41,6 +42,12 @@ class ZeroGridShowcaseApp extends StatefulWidget {
 
 class _ZeroGridShowcaseAppState extends State<ZeroGridShowcaseApp> {
   late final ZeroGridController<MarketOrderRow> _controller;
+  final ScrollController _vScroll = ScrollController();
+  final ScrollController _hScroll = ScrollController();
+  final TextEditingController _searchCtrl = TextEditingController();
+  Timer? _tourTimer;
+  int _step = 0;
+
   static const _tickers = ['BTC-PERP', 'ETH-PERP', 'SOL-PERP', 'NVDA', 'AAPL'];
 
   @override
@@ -65,20 +72,20 @@ class _ZeroGridShowcaseAppState extends State<ZeroGridShowcaseApp> {
         ZeroGridColumn(
           id: 'id',
           title: 'ORDER #',
-          width: 92,
+          width: 90,
           freeze: FreezePosition.left,
           valueGetter: (r) => '#${r.orderId}',
         ),
         ZeroGridColumn(
           id: 'ticker',
           title: 'SYMBOL',
-          width: 105,
+          width: 102,
           valueGetter: (r) => r.ticker,
         ),
         ZeroGridColumn(
           id: 'side',
           title: 'SIDE',
-          width: 78,
+          width: 76,
           alignment: Alignment.center,
           valueGetter: (r) => r.side,
           cellBuilder: (ctx, rowIdx, item, val, isSelected) {
@@ -103,16 +110,24 @@ class _ZeroGridShowcaseAppState extends State<ZeroGridShowcaseApp> {
         ZeroGridColumn(
           id: 'price',
           title: 'PRICE (\$)',
-          width: 104,
+          width: 102,
           alignment: Alignment.centerRight,
           aggregation: GridAggregation.average,
           valueGetter: (r) => r.price,
           formatter: (v) => (v as double).toStringAsFixed(2),
         ),
         ZeroGridColumn(
+          id: 'qty',
+          title: 'QTY',
+          width: 82,
+          alignment: Alignment.centerRight,
+          aggregation: GridAggregation.sum,
+          valueGetter: (r) => r.quantity,
+        ),
+        ZeroGridColumn(
           id: 'notional',
           title: 'TOTAL (\$)',
-          width: 112,
+          width: 110,
           freeze: FreezePosition.right,
           alignment: Alignment.centerRight,
           aggregation: GridAggregation.sum,
@@ -131,10 +146,55 @@ class _ZeroGridShowcaseAppState extends State<ZeroGridShowcaseApp> {
           focus: CellCoordinate(rowIndex: 4, columnIndex: 3),
         ),
       );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tourTimer = Timer.periodic(const Duration(milliseconds: 1050), (_) {
+        if (mounted) _advanceTour();
+      });
+    });
+  }
+
+  void _advanceTour() {
+    _step = (_step + 1) % 5;
+    switch (_step) {
+      case 0:
+        _searchCtrl.text = '';
+        _controller.setFilterQuery('');
+        if (_vScroll.hasClients) {
+          _vScroll.animateTo(0, duration: const Duration(milliseconds: 650), curve: Curves.easeOutCubic);
+        }
+        _controller.setSelectionRange(const CellRange(anchor: CellCoordinate(rowIndex: 1, columnIndex: 1), focus: CellCoordinate(rowIndex: 4, columnIndex: 3)));
+      case 1:
+        if (_vScroll.hasClients) {
+          _vScroll.animateTo(920, duration: const Duration(milliseconds: 800), curve: Curves.easeInOutCubic);
+        }
+        _controller.setSelectionRange(const CellRange(anchor: CellCoordinate(rowIndex: 25, columnIndex: 1), focus: CellCoordinate(rowIndex: 30, columnIndex: 3)));
+      case 2:
+        if (_hScroll.hasClients) {
+          _hScroll.animateTo(110, duration: const Duration(milliseconds: 700), curve: Curves.easeInOut);
+        }
+      case 3:
+        if (_hScroll.hasClients) {
+          _hScroll.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeOut);
+        }
+        if (_vScroll.hasClients) {
+          _vScroll.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeOut);
+        }
+        _controller.toggleSort('price');
+        _controller.setSelectionRange(const CellRange(anchor: CellCoordinate(rowIndex: 2, columnIndex: 2), focus: CellCoordinate(rowIndex: 7, columnIndex: 4)));
+      case 4:
+        _searchCtrl.text = 'BTC-PERP';
+        _controller.setFilterQuery('BTC-PERP');
+        _controller.setSelectionRange(const CellRange(anchor: CellCoordinate(rowIndex: 0, columnIndex: 1), focus: CellCoordinate(rowIndex: 3, columnIndex: 3)));
+    }
   }
 
   @override
   void dispose() {
+    _tourTimer?.cancel();
+    _vScroll.dispose();
+    _hScroll.dispose();
+    _searchCtrl.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -160,6 +220,7 @@ class _ZeroGridShowcaseAppState extends State<ZeroGridShowcaseApp> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
               child: TextField(
+                controller: _searchCtrl,
                 onChanged: _controller.setFilterQuery,
                 decoration: InputDecoration(
                   hintText: ZeroGridDict.searchPlaceholder,
@@ -173,7 +234,11 @@ class _ZeroGridShowcaseAppState extends State<ZeroGridShowcaseApp> {
             ),
           ),
         ),
-        body: ZeroDataGrid<MarketOrderRow>(controller: _controller),
+        body: ZeroDataGrid<MarketOrderRow>(
+          controller: _controller,
+          verticalScrollController: _vScroll,
+          horizontalScrollController: _hScroll,
+        ),
       ),
     );
   }
