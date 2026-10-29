@@ -18,6 +18,10 @@
 
 📚 **Deep-Dive Guides:** [Full Architecture (`DOCUMENTATION.md`)](DOCUMENTATION.md) · [Türkçe Kılavuz (`doc/TR_GUIDE.md`)](doc/TR_GUIDE.md) · [English Guide (`doc/EN_GUIDE.md`)](doc/EN_GUIDE.md)
 
+<br/>
+
+<img src="https://raw.githubusercontent.com/RedlightApps/zero_grid/main/doc/screenshots/zero_grid_showcase.png" width="360" alt="zero_grid 120Hz 100,000-Row iOS Simulator Showcase"/>
+
 </div>
 
 ---

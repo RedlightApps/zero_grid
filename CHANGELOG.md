@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Added high-resolution iOS Simulator showcase screenshots (`pubspec.yaml` gallery & `README.md`), custom column formatter support in footer aggregations, and enhanced 100,000-row trading grid example.
+
 ## 1.0.0
 
 - **Initial Stable Release of `zero_grid` by RedLight Apps (`https://redlightapps.com`).**

@@ -116,13 +116,17 @@ abstract final class IsolateGridEngine {
       }
     }
     if (numericCount == 0) return '-';
-    return switch (column.aggregation) {
-      GridAggregation.sum => _formatNum(sum),
-      GridAggregation.average => _formatNum(sum / numericCount),
-      GridAggregation.min => _formatNum(minVal),
-      GridAggregation.max => _formatNum(maxVal),
-      GridAggregation.count || GridAggregation.none => '',
+    final result = switch (column.aggregation) {
+      GridAggregation.sum => sum,
+      GridAggregation.average => sum / numericCount,
+      GridAggregation.min => minVal,
+      GridAggregation.max => maxVal,
+      GridAggregation.count || GridAggregation.none => 0.0,
     };
+    if (column.formatter != null) {
+      return column.formatter!(result);
+    }
+    return _formatNum(result);
   }
 
   static String _formatNum(double value) {
