@@ -1,0 +1,40 @@
+name: zero_grid
+description: 120Hz 2D-virtualized DataGrid & Spreadsheet engine for Flutter. Supports 1,000,000+ rows, left/right column freezing, background Isolate sorting/filtering, and Excel-style marquee range selection with TSV clipboard export. Zero external dependencies.
+version: 1.0.0
+homepage: https://redlightapps.com
+repository: https://github.com/RedlightApps/zero_grid
+issue_tracker: https://github.com/RedlightApps/zero_grid/issues
+documentation: https://github.com/RedlightApps/zero_grid#readme
+
+funding:
+  - https://www.buymeacoffee.com/yusufkaval
+  - https://github.com/sponsors/kvlyusuf
+  - https://github.com/sponsors/RedlightApps
+
+topics:
+  - datagrid
+  - spreadsheet
+  - table
+  - virtualization
+  - isolate
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
